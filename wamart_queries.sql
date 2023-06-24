@@ -2,7 +2,7 @@ SELECT *
 FROM wal.walmart_store_sales 
 LIMIT 10;
 
--- Check nulll values
+-- Check null values
 SELECT COUNT(*)
 FROM wal.walmart_store_sales
 WHERE weekly_sales IS NULL;
@@ -49,10 +49,8 @@ FROM total_sales
 ORDER BY total_sales DESC
 LIMIT 3;
 
--- View: store_growth_rate
+-- VIEW creation: store_growth_rate
 
-CREATE OR REPLACE VIEW wal.store_growth_rate
- AS
  SELECT subquery.store_id,
     (subquery.sales_2012 - subquery.sales_2010) / subquery.sales_2010 AS growth_rate
    FROM ( SELECT walmart_store_sales.store_id,
@@ -68,9 +66,6 @@ CREATE OR REPLACE VIEW wal.store_growth_rate
                 END) AS sales_2012
            FROM wal.walmart_store_sales
           GROUP BY walmart_store_sales.store_id) subquery;
-
-ALTER TABLE wal.store_growth_rate
-    OWNER TO postgres;
 
 -- Which store has the highest growth rate from 2010 to 2012?
 SELECT store_id, growth_rate
@@ -94,7 +89,7 @@ SELECT
 FROM wal.walmart_store_sales
 GROUP BY week_type;
 
---which holidays have the most sales?
+--Which holidays have the most sales?
 SELECT date, holiday_flag, MAX(weekly_sales) AS highest_sales
 FROM wal.walmart_store_sales
 WHERE holiday_flag = true
