@@ -15,7 +15,7 @@ GROUP BY date
 ORDER BY max_weekly_sales DESC
 LIMIT 5;
 
--- Which year has the maximum sales?
+-- Which year has the highest sales?
 WITH yearly_sales AS (
   SELECT EXTRACT(YEAR FROM date) AS sales_year, 
 		SUM(weekly_sales) AS total_sales
@@ -26,7 +26,7 @@ SELECT sales_year, total_sales
 FROM yearly_sales
 ORDER BY total_sales DESC;
 
---Which month has maximum sales in 2011?
+--Which month had highest sales in 2011?
 WITH monthly_sales AS (
   SELECT EXTRACT(MONTH FROM date) AS sales_month, 
 		SUM(weekly_sales) AS total_sales
@@ -38,7 +38,7 @@ SELECT sales_month, total_sales
 FROM monthly_sales
 ORDER BY total_sales DESC;
 
---Which store has the most sales?
+--Which store had the most sales?
 WITH total_sales AS (
   SELECT store_id, SUM(weekly_sales) AS total_sales
   FROM wal.walmart_store_sales
@@ -67,19 +67,19 @@ LIMIT 3;
            FROM wal.walmart_store_sales
           GROUP BY walmart_store_sales.store_id) subquery;
 
--- Which store has the highest growth rate from 2010 to 2012?
-SELECT store_id, growth_rate
+-- Which store had the highest growth rate from 2010 to 2012?
+SELECT store_id, ROUND(growth_rate * 100, 2) AS growth_rate_percentage
 FROM wal.store_growth_rate
-ORDER BY growth_rate DESC
+ORDER BY growth_rate_percentage DESC
 LIMIT 5;
 
---Stores with the lowest sales growth
-SELECT store_id, growth_rate
+-- Which store had the lowest growth rate from 2010 to 2012?
+SELECT store_id, ROUND(growth_rate * 100, 2) AS growth_rate_percentage
 FROM wal.store_growth_rate
-ORDER BY growth_rate ASC
+ORDER BY growth_rate_percentage ASC
 LIMIT 5;
 
---Total sales during holiday and non-holiday week
+--Total sales during holiday and non-holiday weeks
 SELECT
   CASE
     WHEN holiday_flag THEN 'Holiday Week'
@@ -89,7 +89,7 @@ SELECT
 FROM wal.walmart_store_sales
 GROUP BY week_type;
 
---Which holidays have the most sales?
+--Which holidays had the most sales?
 SELECT date, holiday_flag, MAX(weekly_sales) AS highest_sales
 FROM wal.walmart_store_sales
 WHERE holiday_flag = true
